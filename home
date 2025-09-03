@@ -1,0 +1,143 @@
+class Spacecraft_Expert_System:
+    def __init__(self):
+        self.logs = []  # Initialize an empty list for maintenance logs
+
+    def user_interface(self):
+        # Intro
+        intro = """
+        |Welcome to the Spacecraft Diagnostics Expert System.                     |
+        |Our advanced technology will help diagnose spacecraft issues effectively.|
+        """
+        print(intro)
+
+        # Main menu
+        main_menu = """
+        
+                   | 1. KNOWLEDGE ACQUISITION. |
+                   | 2. SPACECRAFT DIAGNOSTICS.|
+                   | 3. VIEW MAINTENANCE LOGS. |
+                    """
+        print(main_menu)
+        num = int(input("Reply with the relevant option (1-3) to continue: "))
+
+        if num == 1:
+            self.acquire_knowledge()
+        elif num == 2:
+            self.expert_system()
+        elif num == 3:
+            self.view_logs()
+        else:
+            print("Oops! Incorrect option, try again!")
+
+    def acquire_knowledge(self):
+        ack = """
+        |Welcome to the knowledge acquisition section.|
+        |Access is restricted to authorized personnel.|
+        """
+        print(ack)
+
+    def expert_system(self):
+        print("\n Welcome to the SPACECRAFT DIAGNOSTICS section")
+
+        print('\n |W H A T    A R E    Y O U R    S Y M P T O M S   T O D A Y:?|')
+        observations = """
+        'Engine failure', 'power fluctuation', 'overheating', 'navigation errors', 'communication loss',
+        'fuel leakage', 'battery drain', 'temperature anomalies', 'pressure loss', 'unresponsive controls',
+        'systems malfunction', 'warning lights', 'sensor errors', 'software glitches', 'data loss',
+        """
+        print(observations)
+
+        print("\n Enter the spacecraft issues (comma-separated):")
+        spacecraft_input = input().lower().split(',')
+        issues = [issue.strip() for issue in spacecraft_input]
+
+        self.issues = issues
+        self.knowledge_base()
+        self.diagnose_inference(issues)
+
+    def knowledge_base(self):
+        knowledge_db = {
+            'Engine Failure': ['engine failure', 'power fluctuation', 'overheating'],
+            'Navigation Errors': ['navigation errors', 'communication loss', 'sensor errors'],
+            'Fuel System Issues': ['fuel leakage', 'pressure loss', 'temperature anomalies'],
+            'Electrical Problems': ['power fluctuation', 'battery drain', 'warning lights', 'unresponsive controls'],
+            'Software Glitches': ['software glitches', 'data loss', 'systems malfunction'],
+        }
+
+        # Added a corresponding solutions database for troubleshooting suggestions
+        solutions_db = {
+            'Engine Failure': 'Check engine system for overheating or power supply issues. Restart system.',
+            'Navigation Errors': 'Verify communication systems and recalibrate navigation sensors.',
+            'Fuel System Issues': 'Inspect for leaks in the fuel lines and monitor pressure levels.',
+            'Electrical Problems': 'Check battery and power distribution units. Replace faulty components.',
+            'Software Glitches': 'Reboot the spacecraft systems and check for software updates.',
+        }
+
+        self.knowledge_db = knowledge_db
+        self.solutions_db = solutions_db
+
+    def diagnose_inference(self, issues):
+        knowledge_db = self.knowledge_db
+        solutions_db = self.solutions_db
+
+        # Rule-based Inference
+        possible_conditions = []
+        for key, values in knowledge_db.items():
+            if set(issues).issubset(set(values)):
+                possible_conditions.append(key)
+
+        self.possible_conditions = possible_conditions
+        self.solutions_db = solutions_db
+        self.log_session(issues, possible_conditions)  # Log the diagnostic session
+        self.explanation()
+
+    def explanation(self):
+        possible_conditions = self.possible_conditions
+        issues = self.issues
+        solutions_db = self.solutions_db
+
+        if possible_conditions:
+            print('\n D I A G N O S I S   R E S U L T S')
+            print("Most Likely Issues:", possible_conditions)
+
+            # Displaying suggested solutions for each diagnosed issue
+            print("\nSuggested Troubleshooting Steps:")
+            for condition in possible_conditions:
+                print(f"- {condition}: {solutions_db[condition]}")
+
+            print("\nContact technical support for further assistance if issues persist.")
+            print("\nYour issues:", issues, "are common causes of these diagnostics.")
+        else:
+            print("Unknown issue suspected, contact mission control immediately!")
+
+    def log_session(self, issues, possible_conditions):
+        """Log the issues and the diagnostics results."""
+        log_entry = {
+            'issues': issues,
+            'diagnosed_conditions': possible_conditions,
+            'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        self.logs.append(log_entry)
+        print("\nDiagnostic session has been logged.")
+
+    def view_logs(self):
+        """Display the maintenance logs."""
+        if not self.logs:
+            print("\nNo maintenance logs found.")
+            return
+
+        print("\nM A I N T E N A N C E   L O G S")
+        for idx, log in enumerate(self.logs, start=1):
+            print(f"\nLog #{idx}")
+            print(f"Timestamp: {log['timestamp']}")
+            print(f"Issues Reported: {', '.join(log['issues'])}")
+            print(f"Diagnosed Conditions: {', '.join(log['diagnosed_conditions']) if log['diagnosed_conditions'] else 'Unknown'}")
+        print("\nEnd of Logs")
+
+# ----------------------------Class Driver --------------------------------------
+import datetime
+
+handle = Spacecraft_Expert_System()
+handle.user_interface()
+
+#%%
